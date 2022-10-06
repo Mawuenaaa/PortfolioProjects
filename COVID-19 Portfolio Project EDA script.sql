@@ -1,5 +1,4 @@
-
-set @@global.sql_mode := replace(@@global.sql_mode, 'ONLY_FULL_GROUP_BY', '');
+-- COVID-19 DATA EXPLORATION 
 
 SELECT location, date, total_cases, new_cases, total_deaths, population  
 from CovidDeaths cd 
@@ -67,8 +66,6 @@ WHERE location  = 'World'
 
 -- Looking at Total Population Versus Covid-19 Vaccination Numbers 
 
-
-
 SELECT 
 cd.continent, 
 cd.location, 
@@ -104,9 +101,10 @@ FROM PopVac
 GROUP BY location, population 
 
 
--- CREATING VIEW TO STORE DATA FOR SUBSEQUENT VISUALISATIONS
+-- CREATING VIEWS TO STORE DATA FOR SUBSEQUENT CREATION OF DATA VISUALISATIONS AND DASHBOARD IN TABLEAU
 
---   VIEW 1 
+--   VIEW 1 (This view stores data that pertains to the global total cases and total deaths from COVID-19) 
+
 Drop view if exists DeathsFromCases;
 Create View DeathsFromCases as
 SELECT 
@@ -120,8 +118,8 @@ order by 1, 2;
 
 
 
--- VIEW 2 
--- Drop view  if exists CovidDeathsbyContinent;
+-- VIEW 2 (This view contains data pertaining to the total COVID-19 deaths recorded for each country)  
+-- Drop view if exists CovidDeathsbyContinent;
 Create view CovidDeathsbyContinent as 
 SELECT 
 location,
@@ -133,8 +131,7 @@ group by location
 ORDER BY TotalDeathCount DESC ;
 
 
-
--- VIEW 3 
+-- VIEW 3 (This view stores data relating to the total COVID-19 deaths expressed as a percentage of the total population for each country)  
 -- Drop view  if exists CovidDeathsbyLocation;
 Create View CovidDeathsbyLocation as
 SELECT 
@@ -148,7 +145,7 @@ group by location, population
 ORDER BY population_infection_Percentage DESC ;
 
 
--- VIEW 4 
+-- VIEW 4 (This view stores data relating to the changes in the percent of a country's population infected with COVID-19 each day) 
 -- Drop view  if exists CovidDeathsbyLocationandDate;
 Create View CovidDeathsbyLocationandDate as
 SELECT 
