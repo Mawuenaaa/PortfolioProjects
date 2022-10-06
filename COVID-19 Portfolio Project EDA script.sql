@@ -44,14 +44,18 @@ group by continent
 ORDER BY population_infection_Percentage DESC ;
 
 
--- Looking at Continents with Highest COVID-19 Deaths 
+-- Looking at Continents with Highest COVID-19 Deaths
+  
 SELECT 
-continent ,
+location,
 MAX(total_deaths) as TotalDeathCount
 from CovidDeaths cd 
-WHERE continent !=''
-group by continent 
+WHERE continent =''
+AND location not in ('World', 'European Union', 'International')
+group by location 
 ORDER BY TotalDeathCount DESC ;
+
+
 
 
 -- 	COVID-19 Numbers from a Global Perspective 
@@ -102,14 +106,58 @@ GROUP BY location, population
 
 -- CREATING VIEW TO STORE DATA FOR SUBSEQUENT VISUALISATIONS
 
-
-Create View CovidDeathsbyContinent as
+--   VIEW 1 
+Drop view if exists DeathsFromCases;
+Create View DeathsFromCases as
 SELECT 
-continent,
+SUM(new_cases) as total_cases, 
+SUM(new_deaths) as total_deaths, 
+SUM(new_cases)/ SUM(new_deaths) *100 as DeathsPercentage
+FROM CovidDeaths cd 
+WHERE continent != ''
+-- GROUP BY date 
+order by 1, 2;  
+
+
+
+-- VIEW 2 
+-- Drop view  if exists CovidDeathsbyContinent;
+Create view CovidDeathsbyContinent as 
+SELECT 
+location,
+MAX(total_deaths) as TotalDeathCount
+from CovidDeaths cd 
+WHERE continent =''
+AND location not in ('World', 'European Union', 'International')
+group by location 
+ORDER BY TotalDeathCount DESC ;
+
+
+
+-- VIEW 3 
+-- Drop view  if exists CovidDeathsbyLocation;
+Create View CovidDeathsbyLocation as
+SELECT 
+location,
+population,
 MAX(total_cases) as HighestInfectionCount,
 MAX(total_cases /population) *100 as Population_infection_Percentage 
 from CovidDeaths cd 
 WHERE continent !=''
-group by continent
--- ORDER BY population_infection_Percentage DESC ;
+group by location, population
+ORDER BY population_infection_Percentage DESC ;
 
+
+-- VIEW 4 
+-- Drop view  if exists CovidDeathsbyLocationandDate;
+Create View CovidDeathsbyLocationandDate as
+SELECT 
+location,
+population,
+date,
+MAX(total_cases) as HighestInfectionCount,
+MAX(total_cases /population) *100 as Population_infection_Percentage 
+from CovidDeaths cd 
+WHERE continent !=''
+group by location, population, date
+ORDER BY population_infection_Percentage DESC ;
