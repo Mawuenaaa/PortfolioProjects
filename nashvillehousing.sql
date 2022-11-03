@@ -108,5 +108,4 @@ drop column SoldAsVacant,
 drop column OwnerAddress,
 drop column TaxDistrict;
 
-select * from nashvillehousing 
 
